@@ -9,12 +9,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true});
 const campgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 });
 
 const Campground = mongoose.model("Campground", campgroundSchema);
 
-/* Campground.create({name: "Granit Hill", image: "https://images.pexels.com/photos/2419278/pexels-photo-2419278.jpeg"}, function(err, campground){
+/* Campground.create({name: "VW Land", 
+                    image: "https://cdn.pixabay.com/photo/2016/11/21/14/31/vw-bus-1845719_1280.jpg", 
+                    description: "Love your VW Bus? This exclusive campground offers services only for VW bas owners."}, function(err, campground){
     if(err){
         console.log(err);
     }
@@ -24,10 +27,6 @@ const Campground = mongoose.model("Campground", campgroundSchema);
     }
 }) */
 
-/* const campgrounds = [
-    {name: "Mountain Gost Rest", image: "https://pixabay.com/get/57e1d14a4e52ae14f1dc84609620367d1c3ed9e04e507440732973d59f44cc_340.jpg"},
-    {name: "Algonquin Park", image: "https://pixabay.com/get/54e5dc474355a914f1dc84609620367d1c3ed9e04e507440732973d59f44cc_340.jpg"}
-]; */
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -38,7 +37,7 @@ app.get("/campgrounds", function(req, res){
         if (err){
             console.log(err);
         } else {
-            res.render("campgrounds", {campgrounds: campgrounds});
+            res.render("index", {campgrounds: campgrounds});
         }
     })
 })
@@ -47,10 +46,22 @@ app.get("/campgrounds/new", function(req, res){
     res.render("new");
 })
 
+app.get("/campgrounds/:id", function(req, res){
+    Campground.findById(req.params.id, function(err, campground){
+        if(err) {
+            console.log(err)
+        } else {
+            res.render("show", {campground: campground});
+        }
+    })
+    
+})
+
 app.post("/campgrounds", function(req, res){
     const name = req.body.name;
     const img = req.body.image;
-    let newCamp = {name: name, image: img};
+    const description = req.body.description;
+    let newCamp = {name: name, image: img, description: description};
     Campground.create(newCamp, function(err, campground){
         if (err) {
             console.log(err);
