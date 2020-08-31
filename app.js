@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
+mongoose.set('useUnifiedTopology', true);
 mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true});
 const campgroundSchema = new mongoose.Schema({
     name: String,
@@ -15,9 +16,9 @@ const campgroundSchema = new mongoose.Schema({
 
 const Campground = mongoose.model("Campground", campgroundSchema);
 
-/* Campground.create({name: "VW Land", 
-                    image: "https://cdn.pixabay.com/photo/2016/11/21/14/31/vw-bus-1845719_1280.jpg", 
-                    description: "Love your VW Bus? This exclusive campground offers services only for VW bas owners."}, function(err, campground){
+/* Campground.create({name: "Algonquin Park", 
+                    image: "https://cdn.pixabay.com/photo/2016/01/19/16/48/teepee-1149402_1280.jpg", 
+                    description: "A beatiful provincial park in Ontario. Provides a campground as well as winderness camping for those who want it."}, function(err, campground){
     if(err){
         console.log(err);
     }
